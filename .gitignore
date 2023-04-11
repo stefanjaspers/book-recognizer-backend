@@ -4,6 +4,9 @@ checkpoints/
 # Grounding DINO
 GroundingDINO/
 
+# Image outputs
+outputs/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
