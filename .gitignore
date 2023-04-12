@@ -2,9 +2,10 @@
 checkpoints/
 
 # Grounding DINO
-GroundingDINO/
+# GroundingDINO/
 
-# Image outputs
+# Images
+assets/
 outputs/
 
 # Byte-compiled / optimized / DLL files
