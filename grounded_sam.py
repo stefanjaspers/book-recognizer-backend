@@ -259,12 +259,12 @@ def extract_text_from_segments(mask_list, image, box_list, label_list):
 config_file = "GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py"
 grounded_checkpoint = "checkpoints/groundingdino_swint_ogc.pth"
 sam_checkpoint = "checkpoints/sam_vit_h_4b8939.pth"
-image_path = "assets/book-test-2.jpg"
+image_path = "assets/book-test-1.png"
 text_prompt = "book"
 output_dir = "outputs"
 box_threshold = 0.35
 text_threshold = 0.30
-device = "cuda"
+device = "cpu"
 
 # Create output directory.
 os.makedirs(output_dir, exist_ok=True)
