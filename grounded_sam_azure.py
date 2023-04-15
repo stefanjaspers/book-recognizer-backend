@@ -1,6 +1,8 @@
 import os
-import base64
+import sys
+import time
 from io import BytesIO
+from array import array
 
 import numpy as np
 import torch
@@ -8,10 +10,12 @@ import torch
 import cv2
 import matplotlib.pyplot as plt
 from PIL import Image
-import easyocr
 
-# AWS SDK
-import boto3
+# Azure Cognitive Services
+from azure.cognitiveservices.vision.computervision import ComputerVisionClient
+from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
+from azure.cognitiveservices.vision.computervision.models import VisualFeatureTypes
+from msrest.authentication import CognitiveServicesCredentials
 
 # Grounding DINO
 import GroundingDINO.groundingdino.datasets.transforms as T
@@ -25,8 +29,17 @@ from GroundingDINO.groundingdino.util.utils import (
 # Segment Anything
 from segment_anything import build_sam, SamPredictor
 
-# Instantiate Amazon Rekognition client
-client = boto3.client("rekognition")
+'''
+Authenticate
+Authenticates your credentials and creates a client.
+'''
+subscription_key = "fedc9106cad6447692c5abffb9fb639e"
+endpoint = "https://book-detection.cognitiveservices.azure.com/"
+
+computervision_client = ComputerVisionClient(endpoint, CognitiveServicesCredentials(subscription_key))
+'''
+END - Authenticate
+'''
 
 
 # Reads image from given file path, converts it to RGB mode,
@@ -130,8 +143,6 @@ def show_box(box, ax, label):
 def save_mask_data(mask_list, image, box_list):
     image_np = np.array(image)
 
-    extracted_texts = []
-
     for _, (mask, box) in enumerate(zip(mask_list, box_list)):
         mask_np = mask.cpu().numpy().astype(bool)
 
@@ -156,24 +167,46 @@ def save_mask_data(mask_list, image, box_list):
         # Crop the image using the bounding box
         cropped_segment_image = segment_image.crop((x1, y1, x2, y2))
 
-        extracted_texts.append(extract_text_from_segment(cropped_segment_image))
-
-    return extracted_texts
+        extract_text_from_segment(cropped_segment_image)
 
     
 def extract_text_from_segment(image):
-    # Create a buffer to hold the binary data
-    buffer = BytesIO()
+    print("extracting text")
+    # # Create a buffer to hold the binary data
+    # buffer = BytesIO()
 
-    # Save the PIL image in the buffer using the specified format
-    image.save(buffer, format="PNG")
+    # # Save the PIL image in the buffer using the specified format
+    # image.save(buffer, format="PNG")
 
-    # Get the binary data from the buffer
-    image_bytes = buffer.getvalue()
+    # # Get the binary data from the buffer
+    # image_bytes = buffer.getvalue()
 
-    response = client.detect_text(Image={"Bytes": image_bytes})
+    read_image_url = read_image_url = "https://raw.githubusercontent.com/MicrosoftDocs/azure-docs/master/articles/cognitive-services/Computer-vision/Images/readsample.jpg"
 
-    return response
+    read_response = computervision_client.read_in_stream(read_image_url, raw=True)
+
+    read_operation_location = read_response.headers["Operation-Location"]
+
+    operation_id = read_operation_location.split("/")[-1]
+
+    while True:
+        read_result = computervision_client.get_read_result(operation_id)
+        if read_result.status not in ['notStarted', 'running']:
+            break
+        time.sleep(1)
+    
+    # Print the detected text, line by line
+    if read_result.status == OperationStatusCodes.succeeded:
+        for text_result in read_result.analyze_result.read_results:
+            for line in text_result.lines:
+                print(line.text)
+                print(line.bounding_box)
+    print()
+    '''
+    END - Read File - remote
+    '''
+
+    print("End of Computer Vision quickstart.")
 
 
 # Configuration.
@@ -238,18 +271,3 @@ plt.savefig(
     pad_inches=0.0,
 )
 
-# save_mask_data(output_dir, masks, image, boxes_filt)
-
-texts = save_mask_data(masks, image, boxes_filt)
-
-for text in texts:
-    text_detections = text['TextDetections']
-    print('Detected text\n----------')
-    for text in text_detections:
-        print('Detected text:' + text['DetectedText'])
-        print('Confidence: ' + "{:.2f}".format(text['Confidence']) + "%")
-        print('Id: {}'.format(text['Id']))
-        if 'ParentId' in text:
-            print('Parent Id: {}'.format(text['ParentId']))
-        print('Type:' + text['Type'])
-        print()
