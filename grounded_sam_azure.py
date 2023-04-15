@@ -1,8 +1,6 @@
 import os
-import sys
 import time
-from io import BytesIO
-from array import array
+from io import BytesIO, BufferedReader
 
 import numpy as np
 import torch
@@ -14,7 +12,6 @@ from PIL import Image
 # Azure Cognitive Services
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
-from azure.cognitiveservices.vision.computervision.models import VisualFeatureTypes
 from msrest.authentication import CognitiveServicesCredentials
 
 # Grounding DINO
@@ -143,6 +140,8 @@ def show_box(box, ax, label):
 def save_mask_data(mask_list, image, box_list):
     image_np = np.array(image)
 
+    extracted_texts = []
+
     for _, (mask, box) in enumerate(zip(mask_list, box_list)):
         mask_np = mask.cpu().numpy().astype(bool)
 
@@ -167,23 +166,28 @@ def save_mask_data(mask_list, image, box_list):
         # Crop the image using the bounding box
         cropped_segment_image = segment_image.crop((x1, y1, x2, y2))
 
-        extract_text_from_segment(cropped_segment_image)
+        extracted_texts.append(extract_text_from_segment(cropped_segment_image))
+
+    return extracted_texts
 
     
 def extract_text_from_segment(image):
-    print("extracting text")
-    # # Create a buffer to hold the binary data
-    # buffer = BytesIO()
+    # Create a buffer to hold the binary data
+    buffer = BytesIO()
 
-    # # Save the PIL image in the buffer using the specified format
-    # image.save(buffer, format="PNG")
+    # Save the PIL image in the buffer using the specified format
+    image.save(buffer, format="PNG")
 
-    # # Get the binary data from the buffer
-    # image_bytes = buffer.getvalue()
+    # Get the binary data from the buffer
+    image_bytes = buffer.getvalue()
 
-    read_image_url = read_image_url = "https://raw.githubusercontent.com/MicrosoftDocs/azure-docs/master/articles/cognitive-services/Computer-vision/Images/readsample.jpg"
+    # Create a new BytesIO object from the bytes data
+    bytes_io = BytesIO(image_bytes)
 
-    read_response = computervision_client.read_in_stream(read_image_url, raw=True)
+    # Create a BufferedReader object from the BytesIO object
+    buffered_reader = BufferedReader(bytes_io)
+
+    read_response = computervision_client.read_in_stream(buffered_reader, raw=True)
 
     read_operation_location = read_response.headers["Operation-Location"]
 
@@ -191,22 +195,22 @@ def extract_text_from_segment(image):
 
     while True:
         read_result = computervision_client.get_read_result(operation_id)
-        if read_result.status not in ['notStarted', 'running']:
+        if read_result.status.lower () not in ['notstarted', 'running']:
             break
-        time.sleep(1)
-    
-    # Print the detected text, line by line
+        print ('Waiting for result...')
+        time.sleep(10)
+
+    combined_string = ""
+
     if read_result.status == OperationStatusCodes.succeeded:
         for text_result in read_result.analyze_result.read_results:
             for line in text_result.lines:
-                print(line.text)
-                print(line.bounding_box)
-    print()
-    '''
-    END - Read File - remote
-    '''
+                combined_string += line.text + " "
+    
+    # Remove the extra space at the end of the combined string
+    combined_string = combined_string.strip()
 
-    print("End of Computer Vision quickstart.")
+    return combined_string
 
 
 # Configuration.
@@ -271,3 +275,6 @@ plt.savefig(
     pad_inches=0.0,
 )
 
+book_texts = save_mask_data(masks, image, boxes_filt)
+for text in book_texts:
+    print(text)
