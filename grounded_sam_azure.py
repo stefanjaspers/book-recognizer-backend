@@ -197,8 +197,8 @@ def extract_text_from_segment(image):
         read_result = computervision_client.get_read_result(operation_id)
         if read_result.status.lower () not in ['notstarted', 'running']:
             break
-        print ('Waiting for result...')
-        time.sleep(10)
+        print ('Performing OCR...')
+        time.sleep(5)
 
     combined_string = ""
 
@@ -217,7 +217,7 @@ def extract_text_from_segment(image):
 config_file = "GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py"
 grounded_checkpoint = "checkpoints/groundingdino_swint_ogc.pth"
 sam_checkpoint = "checkpoints/sam_vit_h_4b8939.pth"
-image_path = "assets/book-test-2.jpg"
+image_path = "assets/book-test-3.jpeg"
 text_prompt = "book"
 output_dir = "outputs"
 box_threshold = 0.35
