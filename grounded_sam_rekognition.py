@@ -1,5 +1,4 @@
 import os
-import base64
 from io import BytesIO
 
 import numpy as np
@@ -8,7 +7,6 @@ import torch
 import cv2
 import matplotlib.pyplot as plt
 from PIL import Image
-import easyocr
 
 # AWS SDK
 import boto3
@@ -126,6 +124,7 @@ def show_box(box, ax, label):
     )
     ax.text(x0, y0, label)
 
+import time
 
 def save_mask_data(mask_list, image, box_list):
     image_np = np.array(image)
@@ -173,7 +172,17 @@ def extract_text_from_segment(image):
 
     response = client.detect_text(Image={"Bytes": image_bytes})
 
-    return response
+    combined_string = ""
+
+    text_detections = response['TextDetections']
+    for text in text_detections:
+        if text["Type"] == "LINE":
+            combined_string += text["DetectedText"] + " "
+
+    # Remove the extra space at the end of the combined string
+    combined_string = combined_string.strip()
+
+    return combined_string
 
 
 # Configuration.
@@ -185,7 +194,7 @@ text_prompt = "book"
 output_dir = "outputs"
 box_threshold = 0.35
 text_threshold = 0.30
-device = "cpu"
+device = "cuda"
 
 # Create output directory.
 os.makedirs(output_dir, exist_ok=True)
@@ -238,18 +247,12 @@ plt.savefig(
     pad_inches=0.0,
 )
 
-# save_mask_data(output_dir, masks, image, boxes_filt)
+start_time = time.time()
+book_texts = save_mask_data(masks, image, boxes_filt)
+end_time = time.time()
 
-texts = save_mask_data(masks, image, boxes_filt)
+elapsed_time = end_time - start_time
+print(f"The function took {elapsed_time} seconds to execute.")
 
-for text in texts:
-    text_detections = text['TextDetections']
-    print('Detected text\n----------')
-    for text in text_detections:
-        print('Detected text:' + text['DetectedText'])
-        print('Confidence: ' + "{:.2f}".format(text['Confidence']) + "%")
-        print('Id: {}'.format(text['Id']))
-        if 'ParentId' in text:
-            print('Parent Id: {}'.format(text['ParentId']))
-        print('Type:' + text['Type'])
-        print()
+for text in book_texts:
+    print(text)

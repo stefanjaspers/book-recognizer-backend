@@ -136,6 +136,7 @@ def show_box(box, ax, label):
     )
     ax.text(x0, y0, label)
 
+import time
 
 def save_mask_data(mask_list, image, box_list):
     image_np = np.array(image)
@@ -169,8 +170,8 @@ def save_mask_data(mask_list, image, box_list):
         extracted_texts.append(extract_text_from_segment(cropped_segment_image))
 
     return extracted_texts
-
     
+
 def extract_text_from_segment(image):
     # Create a buffer to hold the binary data
     buffer = BytesIO()
@@ -217,12 +218,12 @@ def extract_text_from_segment(image):
 config_file = "GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py"
 grounded_checkpoint = "checkpoints/groundingdino_swint_ogc.pth"
 sam_checkpoint = "checkpoints/sam_vit_h_4b8939.pth"
-image_path = "assets/book-test-3.jpeg"
+image_path = "assets/book-test-2.jpg"
 text_prompt = "book"
 output_dir = "outputs"
 box_threshold = 0.35
 text_threshold = 0.30
-device = "cpu"
+device = "cuda"
 
 # Create output directory.
 os.makedirs(output_dir, exist_ok=True)
@@ -275,6 +276,12 @@ plt.savefig(
     pad_inches=0.0,
 )
 
+start_time = time.time()
 book_texts = save_mask_data(masks, image, boxes_filt)
+end_time = time.time()
+
+elapsed_time = end_time - start_time
+print(f"The function took {elapsed_time} seconds to execute.")
+
 for text in book_texts:
     print(text)
