@@ -1,3 +1,4 @@
+import json
 import os
 from io import BytesIO
 
@@ -124,9 +125,37 @@ def show_box(box, ax, label):
     )
     ax.text(x0, y0, label)
 
-import time
 
-def save_mask_data(mask_list, image, box_list):
+def save_mask_data(output_dir, mask_list, box_list, label_list):
+    value = 0  # 0 for background
+
+    mask_img = torch.zeros(mask_list.shape[-2:])
+    for idx, mask in enumerate(mask_list):
+        mask_img[mask.cpu().numpy()[0] == True] = value + idx + 1
+    plt.figure(figsize=(10, 10))
+    plt.imshow(mask_img.numpy())
+    plt.axis('off')
+    plt.savefig(os.path.join(output_dir, 'mask.jpg'), bbox_inches="tight", dpi=300, pad_inches=0.0)
+
+    json_data = [{
+        'value': value,
+        'label': 'background'
+    }]
+    for label, box in zip(label_list, box_list):
+        value += 1
+        name, logit = label.split('(')
+        logit = logit[:-1] # the last is ')'
+        json_data.append({
+            'value': value,
+            'label': name,
+            'logit': float(logit),
+            'box': box.numpy().tolist(),
+        })
+    with open(os.path.join(output_dir, 'mask.json'), 'w') as f:
+        json.dump(json_data, f)
+
+
+def segment_books_and_extract_text(mask_list, image, box_list):
     image_np = np.array(image)
 
     extracted_texts = []
@@ -189,7 +218,7 @@ def extract_text_from_segment(image):
 config_file = "GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py"
 grounded_checkpoint = "checkpoints/groundingdino_swint_ogc.pth"
 sam_checkpoint = "checkpoints/sam_vit_h_4b8939.pth"
-image_path = "assets/book-test-2.jpg"
+image_path = "assets/book-test-3.jpeg"
 text_prompt = "book"
 output_dir = "outputs"
 box_threshold = 0.35
@@ -247,12 +276,5 @@ plt.savefig(
     pad_inches=0.0,
 )
 
-start_time = time.time()
-book_texts = save_mask_data(masks, image, boxes_filt)
-end_time = time.time()
-
-elapsed_time = end_time - start_time
-print(f"The function took {elapsed_time} seconds to execute.")
-
-for text in book_texts:
-    print(text)
+save_mask_data(output_dir, masks, boxes_filt, pred_phrases)
+book_texts = segment_books_and_extract_text(masks, image, boxes_filt)

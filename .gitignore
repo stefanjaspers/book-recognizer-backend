@@ -1,9 +1,6 @@
 # Model checkpoints
 checkpoints/
 
-# Grounding DINO
-# GroundingDINO/
-
 # Images
 assets/
 outputs/
