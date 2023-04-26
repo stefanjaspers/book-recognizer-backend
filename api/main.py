@@ -1,13 +1,12 @@
 # FastAPI
 from fastapi import FastAPI
-import uvicorn
 
 # MongoDB driver
 from motor.motor_asyncio import AsyncIOMotorClient
 from config import mongo_config
 
 # Router imports
-from routers import auth, user
+from routers import auth
 
 
 app = FastAPI()
@@ -25,4 +24,3 @@ async def shutdown_mongo_client():
 
 
 app.include_router(auth.router)
-app.include_router(user.router)
