@@ -6,7 +6,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from config import mongo_config
 
 # Router imports
-from routers import auth
+from routers import auth, book
 
 
 app = FastAPI()
@@ -24,3 +24,4 @@ async def shutdown_mongo_client():
 
 
 app.include_router(auth.router)
+app.include_router(book.router)
