@@ -14,10 +14,10 @@ class CreateUser(BaseModel):
         allow_population_by_field_name = True
         schema_extra = {
             "example": {
-                "username": "johndoe",
-                "password": "test1234",
-                "first_name": "John",
-                "last_name": "Doe",
+                "username": "stefanjaspers",
+                "password": "guitarhero99",
+                "first_name": "Stefan",
+                "last_name": "Jaspers",
             }
         }
 
