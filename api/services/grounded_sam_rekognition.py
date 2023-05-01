@@ -12,11 +12,14 @@ from PIL import Image
 # AWS SDK
 import boto3
 
+import sys
+sys.path.append('../../GroundingDINO')
+
 # Grounding DINO
-import GroundingDINO.groundingdino.datasets.transforms as T
-from GroundingDINO.groundingdino.models import build_model
-from GroundingDINO.groundingdino.util.slconfig import SLConfig
-from GroundingDINO.groundingdino.util.utils import (
+import groundingdino.datasets.transforms as T
+from groundingdino.models import build_model
+from groundingdino.util.slconfig import SLConfig
+from groundingdino.util.utils import (
     clean_state_dict,
     get_phrases_from_posmap,
 )
@@ -215,12 +218,12 @@ def extract_text_from_segment(image):
 
 
 # Configuration.
-config_file = "GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py"
-grounded_checkpoint = "checkpoints/groundingdino_swint_ogc.pth"
-sam_checkpoint = "checkpoints/sam_vit_h_4b8939.pth"
-image_path = "assets/book-test-3.jpeg"
+config_file = "../../GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py"
+grounded_checkpoint = "../../checkpoints/groundingdino_swint_ogc.pth"
+sam_checkpoint = "../../checkpoints/sam_vit_h_4b8939.pth"
+image_path = "../../assets/book-test-2.jpg"
 text_prompt = "book"
-output_dir = "outputs"
+output_dir = "../../outputs"
 box_threshold = 0.35
 text_threshold = 0.30
 device = "cuda"

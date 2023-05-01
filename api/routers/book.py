@@ -66,6 +66,7 @@ async def remove_book_from_user(
             status_code=status.HTTP_404_NOT_FOUND, detail="Unable to find book."
         )
 
+    # Make sure only the owner of the book can delete it
     if user["_id"] != delete_book["user"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
