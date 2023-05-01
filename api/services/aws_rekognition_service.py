@@ -9,13 +9,13 @@ class AWSRekognitionService:
         self.client = boto3.client("rekognition")
 
     def extract_text_from_segment(self, image):
-        # Create a buffer to hold the binary data
+        # Create a buffer to hold the binary data.
         buffer = BytesIO()
 
-        # Save the PIL image in the buffer using the specified format
+        # Save the PIL image in the buffer using the specified format.
         image.save(buffer, format="PNG")
 
-        # Get the binary data from the buffer
+        # Get the binary data from the buffer.
         image_bytes = buffer.getvalue()
 
         response = self.client.detect_text(Image={"Bytes": image_bytes})
@@ -28,7 +28,7 @@ class AWSRekognitionService:
             if text["Type"] == "LINE":
                 combined_string += text["DetectedText"] + " "
 
-        # Remove the extra space at the end of the combined string
+        # Remove the extra space at the end of the combined string.
         combined_string = combined_string.strip()
 
         return combined_string

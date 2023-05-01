@@ -1,4 +1,5 @@
 import numpy as np
+import cv2
 from PIL import Image
 
 # Services
@@ -12,7 +13,10 @@ class ImageSegmentationService:
     def __init__(self) -> None:
         pass
 
-    def segment_books(self, mask_list, image, box_list):
+    def segment_books(self, mask_list, image_path, box_list):
+        image = cv2.imread(image_path)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
         image_np = np.array(image)
 
         extracted_texts = []
@@ -41,6 +45,8 @@ class ImageSegmentationService:
             # Crop the image using the bounding box
             cropped_segment_image = segment_image.crop((x1, y1, x2, y2))
 
-            extracted_texts.append(aws_rekognition_service.extract_text_from_segment(cropped_segment_image))
+            extracted_texts.append(
+                aws_rekognition_service.extract_text_from_segment(cropped_segment_image)
+            )
 
         return extracted_texts
