@@ -1,20 +1,31 @@
-# FastAPI
+# FastAPI.
 from fastapi import APIRouter, Body, Depends, HTTPException, Request, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
-# General
+# General.
 from typing import Annotated
 
-# Models
+# Models.
 from models.book import AddBookToUserModel
 from models.book import RemoveBookFromUserModel
 from .auth import get_current_user
 
+# Services.
+from services.book_recognition_service import BookRecognitionService
+
+# Instantiate services.
+book_recognition_service = BookRecognitionService()
 
 router = APIRouter(prefix="/books", tags=["books"])
 
 user_dependency = Annotated[dict, Depends(get_current_user)]
+
+
+@router.get("/recognize", status_code=status.HTTP_200_OK)
+def recognize_books():
+    book_texts = book_recognition_service.recognize()
+    return JSONResponse(status_code=status.HTTP_200_OK, content=book_texts)
 
 
 @router.post("/add", status_code=status.HTTP_201_CREATED)

@@ -3,7 +3,7 @@ import cv2
 from PIL import Image
 
 # Services
-from aws_rekognition_service import AWSRekognitionService
+from .aws_rekognition_service import AWSRekognitionService
 
 # Initialize service
 aws_rekognition_service = AWSRekognitionService()

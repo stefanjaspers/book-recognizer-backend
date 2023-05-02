@@ -2,10 +2,10 @@ import os
 import json
 
 # Services.
-from grounding_dino_service import GroundingDINOService
-from image_segmentation_service import ImageSegmentationService
-from segment_anything_service import SegmentAnythingService
-from visualization_service import VisualizationService
+from .grounding_dino_service import GroundingDINOService
+from .image_segmentation_service import ImageSegmentationService
+from .segment_anything_service import SegmentAnythingService
+from .visualization_service import VisualizationService
 
 # Initialize services.
 grounding_dino_service = GroundingDINOService()
@@ -13,24 +13,30 @@ image_segmentation_service = ImageSegmentationService()
 segment_anything_service = SegmentAnythingService()
 visualization_service = VisualizationService()
 
-with open("../config/ml_config.json") as json_file:
-    config = json.load(json_file)
+script_dir = os.path.dirname(os.path.realpath(__file__))
+config_file_path = os.path.join(script_dir, "..", "config", "ml_config.json")
+
+with open(config_file_path, "r") as f:
+    config = json.load(f)
 
 
 class BookRecognitionService:
     def __init__(self) -> None:
         pass
 
-    def recognize():
+    def recognize(self):
         # Create output directory.
         os.makedirs(config["output_dir"], exist_ok=True)
 
         # Load image.
-        image_pil, image = grounding_dino_service.load_image(config["image_path"])
+        image_path = os.path.join(script_dir, "..", "..", config["image_path"])
+        image_pil, image = grounding_dino_service.load_image(image_path)
 
         # Load model.
+        config_file = os.path.join(script_dir, "..", "..", config["config_file"])
+        grounded_checkpoint = os.path.join(script_dir, "..", "..", config["grounded_checkpoint"])
         model = grounding_dino_service.load_model(
-            config["config_file"], config["grounded_checkpoint"], config["device"]
+            config_file, grounded_checkpoint, config["device"]
         )
 
         # Run Grounding DINO model.
@@ -44,23 +50,25 @@ class BookRecognitionService:
         )
 
         # Run Segment Anything Model.
+        sam_checkpoint = os.path.join(script_dir, "..", "..", config["sam_checkpoint"])
         masks = segment_anything_service.get_sam_output(
-            config["sam_checkpoint"], config["image_path"], image_pil, boxes_filt
+            sam_checkpoint, image_path, image_pil, boxes_filt
         )
 
         # (optional) Draw output image.
+        output_dir = os.path.join(script_dir, "..", "..", config["output_dir"])
         visualization_service.draw_output_image(
-            config["image_path"], masks, boxes_filt, pred_phrases, config["output_dir"]
+            image_path, masks, boxes_filt, pred_phrases, output_dir
         )
 
         # (optional) Save object masks.
         visualization_service.save_mask_data(
-            config["output_dir"], masks, boxes_filt, pred_phrases
+            output_dir, masks, boxes_filt, pred_phrases
         )
 
         # Run Rekognition OCR model and store book texts in list.
         book_texts = image_segmentation_service.segment_books(
-            masks, config["image_path"], boxes_filt
+            masks, image_path, boxes_filt
         )
 
         return book_texts

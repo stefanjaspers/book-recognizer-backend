@@ -1,11 +1,14 @@
 import torch
 from PIL import Image
 
-# Grounding DINO
+# Grounding DINO.
 import groundingdino.datasets.transforms as T
-from groundingdino.util.slconfig import SLConfig
 from groundingdino.models import build_model
-from groundingdino.util.utils import clean_state_dict, get_phrases_from_posmap
+from groundingdino.util.slconfig import SLConfig
+from groundingdino.util.utils import (
+    clean_state_dict,
+    get_phrases_from_posmap,
+)
 
 
 class GroundingDINOService:

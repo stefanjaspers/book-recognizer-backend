@@ -5,7 +5,7 @@ import torch
 from segment_anything import build_sam, SamPredictor
 
 # Services.
-from grounding_dino_service import GroundingDINOService
+from .grounding_dino_service import GroundingDINOService
 
 # Initialize services.
 grounding_dino_service = GroundingDINOService()
