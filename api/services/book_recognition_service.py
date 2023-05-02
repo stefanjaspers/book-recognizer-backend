@@ -56,15 +56,15 @@ class BookRecognitionService:
         )
 
         # (optional) Draw output image.
-        output_dir = os.path.join(script_dir, "..", "..", config["output_dir"])
-        visualization_service.draw_output_image(
-            image_path, masks, boxes_filt, pred_phrases, output_dir
-        )
+        # output_dir = os.path.join(script_dir, "..", "..", config["output_dir"])
+        # visualization_service.draw_output_image(
+        #     image_path, masks, boxes_filt, pred_phrases, output_dir
+        # )
 
         # (optional) Save object masks.
-        visualization_service.save_mask_data(
-            output_dir, masks, boxes_filt, pred_phrases
-        )
+        # visualization_service.save_mask_data(
+        #     output_dir, masks, boxes_filt, pred_phrases
+        # )
 
         # Run Rekognition OCR model and store book texts in list.
         book_texts = image_segmentation_service.segment_books(
