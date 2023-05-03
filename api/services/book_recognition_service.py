@@ -6,12 +6,14 @@ from .grounding_dino_service import GroundingDINOService
 from .image_segmentation_service import ImageSegmentationService
 from .segment_anything_service import SegmentAnythingService
 from .visualization_service import VisualizationService
+from .google_books_service import GoogleBooksService
 
 # Initialize services.
 grounding_dino_service = GroundingDINOService()
 image_segmentation_service = ImageSegmentationService()
 segment_anything_service = SegmentAnythingService()
 visualization_service = VisualizationService()
+google_books_service = GoogleBooksService()
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 config_file_path = os.path.join(script_dir, "..", "config", "ml_config.json")
@@ -71,4 +73,8 @@ class BookRecognitionService:
             masks, image_path, boxes_filt
         )
 
-        return book_texts
+        processed_book_texts = google_books_service.process_book_texts(book_texts)
+        url_encoded_book_texts = google_books_service.url_encode_strings(processed_book_texts)
+        api_urls = google_books_service.create_api_urls(url_encoded_book_texts)
+
+        return api_urls
