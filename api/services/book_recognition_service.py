@@ -26,7 +26,7 @@ class BookRecognitionService:
     def __init__(self) -> None:
         pass
 
-    def recognize(self):
+    async def recognize(self):
         # Create output directory.
         os.makedirs(config["output_dir"], exist_ok=True)
 
@@ -36,7 +36,9 @@ class BookRecognitionService:
 
         # Load model.
         config_file = os.path.join(script_dir, "..", "..", config["config_file"])
-        grounded_checkpoint = os.path.join(script_dir, "..", "..", config["grounded_checkpoint"])
+        grounded_checkpoint = os.path.join(
+            script_dir, "..", "..", config["grounded_checkpoint"]
+        )
         model = grounding_dino_service.load_model(
             config_file, grounded_checkpoint, config["device"]
         )
@@ -74,7 +76,13 @@ class BookRecognitionService:
         )
 
         processed_book_texts = google_books_service.process_book_texts(book_texts)
-        url_encoded_book_texts = google_books_service.url_encode_strings(processed_book_texts)
+
+        url_encoded_book_texts = google_books_service.url_encode_strings(
+            processed_book_texts
+        )
+
         api_urls = google_books_service.create_api_urls(url_encoded_book_texts)
 
-        return api_urls
+        book_list = await google_books_service.get_book_list(api_urls)
+
+        return book_list

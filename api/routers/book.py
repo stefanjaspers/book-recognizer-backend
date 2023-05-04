@@ -23,8 +23,8 @@ user_dependency = Annotated[dict, Depends(get_current_user)]
 
 
 @router.get("/recognize", status_code=status.HTTP_200_OK)
-def recognize_books():
-    book_texts = book_recognition_service.recognize()
+async def recognize_books():
+    book_texts = await book_recognition_service.recognize()
     return JSONResponse(status_code=status.HTTP_200_OK, content=book_texts)
 
 

@@ -1,5 +1,6 @@
 import os
 import httpx
+import asyncio
 import re
 
 from urllib.parse import quote_plus
@@ -68,3 +69,35 @@ class GoogleBooksService:
             + self.GOOGLE_BOOKS_URL_SUFFIX
             for encoded_book_text in encoded_book_texts
         ]
+
+    """
+    Takes the HTTPX async client and an API URL as arguments, and performs a GET request for that
+    specific book.
+
+    Returns a JSON representation of the result.
+    """
+
+    async def get_book_info(self, client, url):
+        response = await client.get(url)
+        book = response.json()
+
+        return book
+
+    """
+    Takes a list of all API URLS.
+    Uses asyncio to create a list of asynchronous tasks to perform 
+    (retrieve info for all books in this example).
+
+    Returns a JSON object containing info for all books.
+    """
+
+    async def get_book_list(self, encoded_urls):
+        async with httpx.AsyncClient() as client:
+            tasks = []
+
+            for url in encoded_urls:
+                tasks.append(asyncio.ensure_future(self.get_book_info(client, url)))
+
+            book_list = await asyncio.gather(*tasks)
+
+            return book_list
