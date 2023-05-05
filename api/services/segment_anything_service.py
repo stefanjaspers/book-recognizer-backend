@@ -4,12 +4,6 @@ import torch
 # Segment Anything.
 from segment_anything import build_sam, SamPredictor
 
-# Services.
-from .grounding_dino_service import GroundingDINOService
-
-# Initialize services.
-grounding_dino_service = GroundingDINOService()
-
 
 class SegmentAnythingService:
     def __init__(self) -> None:
