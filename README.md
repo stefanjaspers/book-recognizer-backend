@@ -7,7 +7,9 @@ The ihomer Book Recognizer AI serves as the backend in a graduation project at i
 The following open-source AI libraries are used during development:
 
 [Segment Anything Model](https://github.com/facebookresearch/segment-anything)
+
 [Grounding DINO](https://github.com/IDEA-Research/GroundingDINO)
+
 [Amazon Rekognition OCR](https://docs.aws.amazon.com/rekognition/latest/dg/text-detection.html)
 
 The [Google Books API](https://developers.google.com/books/docs/overview) was used to retrieve book information based on the OCR outputs.
