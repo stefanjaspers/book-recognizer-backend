@@ -12,6 +12,12 @@ Create a virtual environment and install the necessary dependencies.
 pip install -r requirements.txt
 ```
 
+Install Segment Anything
+
+```bash
+pip install git+https://github.com/facebookresearch/segment-anything.git
+```
+
 Navigate to the GroundingDINO directory.
 
 ```bash
@@ -24,8 +30,16 @@ Install GroundingDINO using the following command:
 pip install -e .
 ```
 
-Create a new directory called "checkpoints" to store the latest model weight, which can be downloaded here:
+Create a new directory called "checkpoints" to store the latest model weights, which can be downloaded here:
+
+Grounding DINO:
 
 ```bash
 https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
+```
+
+Segment Anything:
+
+```bash
+https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
 ```
