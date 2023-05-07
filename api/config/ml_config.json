@@ -7,5 +7,5 @@
     "output_dir": "outputs",
     "box_threshold": 0.35,
     "text_threshold": 0.30,
-    "device": "cuda"
+    "device": "cpu"
 }
