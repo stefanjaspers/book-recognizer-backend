@@ -24,5 +24,6 @@ class UserSchema(BaseModel):
                 "password": "guitarhero99",
                 "first_name": "Stefan",
                 "last_name": "Jaspers",
+                "book_preferences": []
             }
         }

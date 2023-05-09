@@ -38,7 +38,7 @@ async def add_book_to_user(
     if user is None:
         raise HTTPException(status_code=401, detail="Authentication failed.")
 
-    add_book["user"] = user["_id"]
+    add_book["user_id"] = user["_id"]
 
     # Insert new book into books collection
     new_book = await request.app.mongodb["books"].insert_one(add_book)
@@ -78,7 +78,7 @@ async def remove_book_from_user(
         )
 
     # Make sure only the owner of the book can delete it
-    if user["_id"] != delete_book["user"]:
+    if user["_id"] != delete_book["user_id"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You are not allowed to delete this book.",
