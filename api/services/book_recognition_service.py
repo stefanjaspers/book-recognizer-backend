@@ -35,9 +35,9 @@ class BookRecognitionService:
         image_pil, image = grounding_dino_service.load_image(image_path)
 
         # Load model.
-        config_file = os.path.join(script_dir, "..", config["config_file"])
+        config_file = os.path.join(script_dir, "..", "..", config["config_file"])
         grounded_checkpoint = os.path.join(
-            script_dir, "..", config["grounded_checkpoint"]
+            script_dir, "..", "..", config["grounded_checkpoint"]
         )
         model = grounding_dino_service.load_model(
             config_file, grounded_checkpoint, config["device"]
