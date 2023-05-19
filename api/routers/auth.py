@@ -9,7 +9,7 @@ from passlib.context import CryptContext
 from jose import jwt, JWTError
 
 # Models
-from models.user import CreateUser
+from api.models.user import CreateUser
 
 # General
 import os

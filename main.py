@@ -3,10 +3,10 @@ from fastapi import FastAPI
 
 # MongoDB driver
 from motor.motor_asyncio import AsyncIOMotorClient
-from config import mongo_config
+from api.config import mongo_config
 
 # Router imports
-from routers import auth, book
+from api.routers import auth, book
 
 
 app = FastAPI()

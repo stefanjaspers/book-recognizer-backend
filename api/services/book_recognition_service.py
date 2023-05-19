@@ -2,11 +2,11 @@ import os
 import json
 
 # Services.
-from .grounding_dino_service import GroundingDINOService
-from .image_segmentation_service import ImageSegmentationService
-from .segment_anything_service import SegmentAnythingService
-from .visualization_service import VisualizationService
-from .google_books_service import GoogleBooksService
+from api.services.grounding_dino_service import GroundingDINOService
+from api.services.image_segmentation_service import ImageSegmentationService
+from api.services.segment_anything_service import SegmentAnythingService
+from api.services.visualization_service import VisualizationService
+from api.services.google_books_service import GoogleBooksService
 
 # Initialize services.
 grounding_dino_service = GroundingDINOService()

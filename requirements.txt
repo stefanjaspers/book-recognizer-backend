@@ -1,5 +1,6 @@
 addict==2.4.0
 anyio==3.6.2
+azure-core==1.26.4
 boto3==1.26.114
 botocore==1.29.114
 certifi==2022.12.7
@@ -27,7 +28,7 @@ Jinja2==3.1.2
 jmespath==1.0.1
 jose==1.0.0
 kiwisolver==1.4.4
-lazy_loader==0.2
+lazy-loader==0.2
 MarkupSafe==2.1.2
 matplotlib==3.7.1
 motor==3.1.2
@@ -37,8 +38,7 @@ networkx==3.1
 ninja==1.11.1
 numpy==1.24.2
 oauthlib==3.2.2
-opencv-python==4.7.0.72
-opencv-python-headless==4.5.4.60
+opencv-python-headless==4.5.5.64
 packaging==23.1
 passlib==1.7.4
 Pillow==9.5.0
@@ -78,7 +78,7 @@ torchaudio==2.0.1
 torchvision==0.15.1
 tqdm==4.65.0
 transformers==4.28.1
-typing_extensions==4.5.0
+typing-extensions==4.5.0
 urllib3==1.26.15
 uvicorn==0.22.0
 uvloop==0.17.0
