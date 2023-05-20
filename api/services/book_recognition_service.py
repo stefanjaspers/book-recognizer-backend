@@ -5,14 +5,14 @@ import json
 from .grounding_dino_service import GroundingDINOService
 from .image_segmentation_service import ImageSegmentationService
 from .segment_anything_service import SegmentAnythingService
-from .visualization_service import VisualizationService
+# from .visualization_service import VisualizationService
 from .google_books_service import GoogleBooksService
 
 # Initialize services.
 grounding_dino_service = GroundingDINOService()
 image_segmentation_service = ImageSegmentationService()
 segment_anything_service = SegmentAnythingService()
-visualization_service = VisualizationService()
+# visualization_service = VisualizationService()
 google_books_service = GoogleBooksService()
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
