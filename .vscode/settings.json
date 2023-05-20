@@ -5,6 +5,5 @@
     "python.formatting.provider": "none",
     "python.analysis.extraPaths": [
         "./GroundingDINO",
-        "./ml/GroundingDINO"
     ]
 }

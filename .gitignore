@@ -1,6 +1,9 @@
 # Model checkpoints
 checkpoints/
 
+# AWS credentials
+.aws
+
 # Images
 assets/
 outputs/

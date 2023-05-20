@@ -7,12 +7,12 @@ from fastapi.encoders import jsonable_encoder
 from typing import Annotated
 
 # Models.
-from models.book import AddBookToUserModel
-from models.book import RemoveBookFromUserModel
+from api.models.book import AddBookToUserModel
+from api.models.book import RemoveBookFromUserModel
 from .auth import get_current_user
 
 # Services.
-from services.book_recognition_service import BookRecognitionService
+from api.services.book_recognition_service import BookRecognitionService
 
 # Instantiate services.
 book_recognition_service = BookRecognitionService()

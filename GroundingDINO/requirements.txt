@@ -5,6 +5,6 @@ addict
 yapf
 timm
 numpy
-opencv-python=4.5.5.64
+opencv-python==4.5.5.64
 supervision==0.3.2
 pycocotools
