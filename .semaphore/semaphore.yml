@@ -20,6 +20,7 @@ blocks:
             - checkout
             - cache restore
             - pip download --cache-dir .pip_cache -r requirements.txt
+            - 'pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu'
             - cache store
             - cd GroundingDINO
             - pip install -e .
