@@ -4,6 +4,9 @@ checkpoints/
 # AWS credentials
 .aws
 
+# Test outputs
+test_output/
+
 # Images
 assets/
 outputs/
