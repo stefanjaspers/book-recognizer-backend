@@ -1,1 +1,0 @@
-[{"value": 0, "label": "background"}, {"value": 1, "label": "Label 1", "logit": 0.9, "box": [10, 20, 30, 40]}, {"value": 2, "label": "Label 2", "logit": 0.8, "box": [40, 50, 60, 70]}, {"value": 3, "label": "Label 3", "logit": 0.7, "box": [70, 80, 90, 100]}]
