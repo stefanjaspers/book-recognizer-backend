@@ -2,4 +2,4 @@
 source = api/
 
 [report]
-skip_covered = True
+omit = *__init__.py
