@@ -7,7 +7,7 @@ agent:
 global_job_config:
   prologue:
     commands:
-      - sem-version python 3.10.6
+      - sem-version python 3.10
 blocks:
   - name: Install Dependencies
     task:
