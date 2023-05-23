@@ -28,4 +28,14 @@ blocks:
             - mkdir checkpoints
             - 'curl -L https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth -o checkpoints/sam_vit_h_4b8939.pth'
             - 'curl -L https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth -o checkpoints/groundingdino_swint_ogc.pth'
-            - ls -l checkpoints
+  - name: Run Tests
+    task:
+      prologue:
+        commands:
+          - checkout
+          - cache restore
+          - pip install -r requirements.txt --cache-dir .pip_cache
+      jobs:
+        - name: Run Tests
+          commands:
+            - pytest
