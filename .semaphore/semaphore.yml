@@ -35,6 +35,10 @@ blocks:
           - checkout
           - cache restore
           - pip install -r requirements.txt --cache-dir .pip_cache
+          - 'pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu'
+          - cd GroundingDINO
+          - pip install -e .
+          - cd ..
       jobs:
         - name: Run Tests
           commands:
