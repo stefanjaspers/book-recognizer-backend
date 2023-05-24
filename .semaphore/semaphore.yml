@@ -30,9 +30,11 @@ blocks:
             - 'curl -L https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth -o checkpoints/groundingdino_swint_ogc.pth'
   - name: Run Tests
     task:
+    	secrets:
+      	- name: book-recognizer-backend-env-vars
       prologue:
         commands:
-          - checkout
+        	- checkout
           - cache restore
           - pip install -r requirements.txt --cache-dir .pip_cache
           - 'pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu'
