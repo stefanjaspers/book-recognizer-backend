@@ -28,11 +28,15 @@ class BookRecognitionService:
 
     async def recognize(self):
         # Create output directory.
-        os.makedirs(config["output_dir"], exist_ok=True)
+        # os.makedirs(config["output_dir"], exist_ok=True)
+
+        print("Loading image")
 
         # Load image.
         image_path = os.path.join(script_dir, "..", config["image_path"])
         image_pil, image = grounding_dino_service.load_image(image_path)
+
+        print("Loading model")
 
         # Load model.
         config_file = os.path.join(script_dir, "..", "..", config["config_file"])
@@ -43,6 +47,8 @@ class BookRecognitionService:
             config_file, grounded_checkpoint, config["device"]
         )
 
+        print("Running Grounding DINO model")
+
         # Run Grounding DINO model.
         boxes_filt, pred_phrases = grounding_dino_service.get_grounding_output(
             model,
@@ -52,6 +58,8 @@ class BookRecognitionService:
             config["text_threshold"],
             config["device"],
         )
+
+        print("Running SAM model")
 
         # Run Segment Anything Model.
         sam_checkpoint = os.path.join(script_dir, "..", "..", config["sam_checkpoint"])
@@ -70,10 +78,14 @@ class BookRecognitionService:
         #     output_dir, masks, boxes_filt, pred_phrases
         # )
 
+        print("Running OCR model")
+
         # Run Rekognition OCR model and store book texts in list.
         book_texts = image_segmentation_service.segment_books(
             masks, image_path, boxes_filt
         )
+
+        print("Processing texts")
 
         processed_book_texts = google_books_service.process_book_texts(book_texts)
 

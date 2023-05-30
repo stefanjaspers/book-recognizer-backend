@@ -13,11 +13,13 @@ class SegmentAnythingService:
         predictor = SamPredictor(build_sam(checkpoint=sam_checkpoint))
 
         image = cv2.imread(image_path)
+
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
         predictor.set_image(image)
 
         size = image_pil.size
+
         H, W = size[1], size[0]
 
         for i in range(boxes_filt.size(0)):
