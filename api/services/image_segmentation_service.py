@@ -14,14 +14,20 @@ class ImageSegmentationService:
         pass
 
     def segment_books(self, mask_list, image_path, box_list):
+        # Read the image from image_path
         image = cv2.imread(image_path)
+
+        # Convert from BGR to RGB color space
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
+        # Convert the image to a NumPy array
         image_np = np.array(image)
 
         extracted_texts = []
 
-        for _, (mask, box) in enumerate(zip(mask_list, box_list)):
+        # Iterate through each mask and box pair
+        for mask, box in zip(mask_list, box_list):
+            # Convert the mask from a PyTorch tensor to a boolean NumPy array
             mask_np = mask.cpu().numpy().astype(bool)
 
             # Remove unnecessary first dimension
@@ -45,6 +51,7 @@ class ImageSegmentationService:
             # Crop the image using the bounding box
             cropped_segment_image = segment_image.crop((x1, y1, x2, y2))
 
+            # Run the OCR model for each cropped book and append the text to the list
             extracted_texts.append(
                 aws_rekognition_service.extract_text_from_segment(cropped_segment_image)
             )
