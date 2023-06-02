@@ -31,4 +31,6 @@ COPY --from=checkpoints_downloader /checkpoints /code/checkpoints
 
 COPY .aws /root/.aws
 
-CMD [".venv/bin/uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+EXPOSE 80
+
+CMD [".venv/bin/uvicorn", "main:app"]

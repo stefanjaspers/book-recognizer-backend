@@ -1,5 +1,7 @@
 # FastAPI
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 
 # MongoDB driver
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -11,6 +13,12 @@ from api.routers import book
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 @app.on_event("startup")
 async def startup_mongo_client():
@@ -29,3 +37,7 @@ async def shutdown_mongo_client():
 
 app.include_router(auth.router)
 app.include_router(book.router)
+
+@app.get("/")
+async def redirect_to_docs():
+    return RedirectResponse(url="/docs")
