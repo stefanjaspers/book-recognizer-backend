@@ -38,7 +38,7 @@ jobs:
     - name: Install GroundingDINO
       run: |
         cd GroundingDINO
-        pip install .
+        pip install -e .
         cd ..
 
     - name: Create checkpoints directory and download checkpoints
