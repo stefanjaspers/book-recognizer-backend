@@ -1,0 +1,12 @@
+version: 0.1
+phases:
+  pre_build:
+    commands:
+      - echo ${DOCKERHUB_TOKEN} | docker login -u ${DOCKERHUB_USER} --password-stdin
+  build:
+    commands:
+      - docker build -t book-recognizer-backend:latest .
+  post_build:
+    commands:
+      - docker tag book-recognizer-backend:latest ${DOCKERHUB_USER}/book-recognizer-backend:latest
+      - docker push ${DOCKERHUB_USER}/book-recognizer-backend:latest
