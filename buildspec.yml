@@ -13,7 +13,8 @@ phases:
       
       # ECR login
       - ECR_MAIN_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
-      - aws ecr get-login-password --region ${AWS_REGION} | docker login -u AWS --password-stdin ${ECR_MAIN_URI}
+      # - aws ecr get-login-password --region ${AWS_REGION} | docker login -u AWS --password-stdin ${ECR_MAIN_URI}
+      aws ecr get-login-password --region eu-west-2 | docker login -u AWS --password-stdin 113126529376.dkr.ecr.eu-west-2.amazonaws.com
 
       - ECR_IMAGE_URI="${ECR_MAIN_URI}/${ECR_REPO_NAME}:latest"
   build:
