@@ -1,12 +1,8 @@
 checkpoints/
-.aws
+.aws/
 
 # Test outputs
 test_output/
-
-# Images
-assets/
-outputs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
