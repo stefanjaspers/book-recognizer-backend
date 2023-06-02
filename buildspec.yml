@@ -8,8 +8,8 @@ env:
 phases:
   pre_build:
     commands:
-      - echo "AWS_REGION: ${AWS_REGION}"
-      - echo "AWS_ACCOUNT_ID: ${AWS_ACCOUNT_ID}"
+      - echo ${AWS_REGION}
+      - echo ${AWS_ACCOUNT_ID}
 
       # Docker Hub login
       - echo ${DOCKERHUB_TOKEN} | docker login -u ${DOCKERHUB_USER} --password-stdin
