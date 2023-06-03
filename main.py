@@ -1,3 +1,7 @@
+import boto3
+import os
+from dotenv import load_dotenv
+
 # FastAPI
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,17 +12,23 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from api.config import mongo_config
 
 # Router imports
-from api.routers import auth 
+from api.routers import auth
 from api.routers import book
 
 app = FastAPI()
 
 app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"]
+    CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
 )
+
+load_dotenv()
+
+boto3.setup_default_session(
+    aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+    aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
+    region_name=os.environ["AWS_REGION"],
+)
+
 
 @app.on_event("startup")
 async def startup_mongo_client():
@@ -37,6 +47,7 @@ async def shutdown_mongo_client():
 
 app.include_router(auth.router)
 app.include_router(book.router)
+
 
 @app.get("/")
 async def redirect_to_docs():
