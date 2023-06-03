@@ -44,6 +44,9 @@ jobs:
     - name: Download pip dependencies
       run: pip download --cache-dir .pip_cache -r requirements.txt
 
+    - name: Install setuptools and wheel
+      run: pip install setuptools wheel
+
     - name: Install dependencies
       run: pip install --no-index --find-links .pip_cache -r requirements.txt
 
