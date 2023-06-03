@@ -24,7 +24,6 @@ jobs:
       MONGO_URI: ${{ secrets.MONGO_URI }}
       REGION: ${{ secrets.REGION }}
 
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -44,6 +43,9 @@ jobs:
 
     - name: Download pip dependencies
       run: pip download --cache-dir .pip_cache -r requirements.txt
+
+    - name: Install dependencies
+      run: pip install --no-index --find-links .pip_cache -r requirements.txt
 
     - name: Install PyTorch, torchvision, and torchaudio
       run: pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
