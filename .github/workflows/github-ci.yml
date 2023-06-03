@@ -51,8 +51,14 @@ jobs:
         curl -L https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth -o checkpoints/sam_vit_h_4b8939.pth
         curl -L https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth -o checkpoints/groundingdino_swint_ogc.pth
 
-    - name: Copy .aws directory
-      run: cp -r .aws $HOME/
+    - name: Set up AWS credentials
+      run: |
+        mkdir -p $HOME/.aws
+        echo "[default]" > $HOME/.aws/credentials
+        echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> $HOME/.aws/credentials
+        echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $HOME/.aws/credentials
+        echo "[default]" > $HOME/.aws/config
+        echo "region = ${{ secrets.REGION }}" >> $HOME/.aws/config
 
     - name: Run tests
       run: pytest
