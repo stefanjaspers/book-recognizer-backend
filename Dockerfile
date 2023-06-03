@@ -13,7 +13,7 @@ RUN curl -L https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
 RUN curl -L https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth -o /checkpoints/groundingdino_swint_ogc.pth
 
 # Stage 2: Build the final image
-FROM python:3.10.6-slim
+FROM python:3.10.6
 
 WORKDIR /code
 
