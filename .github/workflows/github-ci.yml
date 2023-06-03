@@ -51,5 +51,8 @@ jobs:
         curl -L https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth -o checkpoints/sam_vit_h_4b8939.pth
         curl -L https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth -o checkpoints/groundingdino_swint_ogc.pth
 
+    - name: Copy .aws directory
+      run: cp -r .aws $HOME/
+
     - name: Run tests
       run: pytest
