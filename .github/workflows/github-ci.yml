@@ -42,7 +42,7 @@ jobs:
           ${{ runner.os }}-pip-
 
     - name: Download pip dependencies
-      run: pip download --cache-dir .pip_cache -r requirements.txt
+      run: pip download --cache-dir .pip_cache --requirement requirements.txt
 
     - name: Install setuptools and wheel
       run: pip install setuptools wheel
