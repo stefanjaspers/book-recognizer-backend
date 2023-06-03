@@ -62,3 +62,50 @@ jobs:
 
     - name: Run tests
       run: pytest
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.login-ecr.outputs.registry }}/book-recognizer-backend:${{ github.sha }}
+
+    - name: Install AWS CLI
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+
+    - name: Deploy to AWS Fargate
+      run: |
+        export ECR_REPOSITORY=${{ steps.login-ecr.outputs.registry }}/book-recognizer-backend
+        export TAG=${{ github.sha }}
+        export AWS_REGION=${{ secrets.REGION }}
+        # Replace with your own cluster and service names
+        export CLUSTER_NAME=my-fargate-cluster
+        export SERVICE_NAME=my-fargate-service
+
+        # Register the new task definition
+        TASK_DEFINITION=$(aws ecs register-task-definition \
+          --family $SERVICE_NAME \
+          --task-role-arn ${{ secrets.TASK_ROLE_ARN }} \
+          --execution-role-arn ${{ secrets.EXECUTION_ROLE_ARN }} \
+          --container-definitions "[{\"name\": \"${SERVICE_NAME}\", \"image\": \"${ECR_REPOSITORY}:${TAG}\", \"portMappings\": [{\"containerPort\": 80, \"hostPort\": 80, \"protocol\": \"tcp\"}], \"essential\": true, \"environment\": [{\"name\": \"REGION\", \"value\": \"${AWS_REGION}\"}], \"logConfiguration\": {\"logDriver\": \"awslogs\", \"options\": {\"awslogs-group\": \"${SERVICE_NAME}-logs\", \"awslogs-region\": \"${AWS_REGION}\", \"awslogs-stream-prefix\": \"${SERVICE_NAME}\"}} }]" \
+          --requires-compatibilities FARGATE \
+          --network-mode awsvpc \
+          --cpu 4096 \
+          --memory 16384 \
+          --query 'taskDefinition.taskDefinitionArn' \
+          --output text)
+
+        # Update the service with the new task definition
+        aws ecs update-service \
+          --cluster $CLUSTER_NAME \
+          --service $SERVICE_NAME \
+          --task-definition $TASK_DEFINITION \
+          --desired-count 1 \
+          --force-new-deployment
