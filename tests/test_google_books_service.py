@@ -45,7 +45,6 @@ def test_create_api_urls(google_books_service):
 
 @pytest.mark.asyncio
 async def test_get_book_info(google_books_service):
-    # Replace with a valid API URL for testing
     api_url = "https://www.googleapis.com/books/v1/volumes?q=Patterson+How+AMERICA+LOST+ITS+MIND+OKLAHOMA"
     async with httpx.AsyncClient() as client:
         book_info = await google_books_service.get_book_info(client, api_url)
@@ -53,7 +52,6 @@ async def test_get_book_info(google_books_service):
 
 @pytest.mark.asyncio
 async def test_get_book_list(google_books_service):
-    # Replace with a list of valid API URLs for testing
     api_urls = [
         "https://www.googleapis.com/books/v1/volumes?q=Patterson+How+AMERICA+LOST+ITS+MIND+OKLAHOMA",
         "https://www.googleapis.com/books/v1/volumes?q=Patterson+How+AMERICA+LOST+ITS+MIND+OKLAHOMA",
