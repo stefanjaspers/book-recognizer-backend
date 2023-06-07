@@ -5,6 +5,7 @@ from fastapi.encoders import jsonable_encoder
 
 # General.
 from typing import Annotated
+from pydantic import BaseModel
 
 # Models.
 from api.models.book import AddBookToUserModel
@@ -21,10 +22,13 @@ router = APIRouter(prefix="/books", tags=["books"])
 
 user_dependency = Annotated[dict, Depends(get_current_user)]
 
+class ImageInput(BaseModel):
+    image: str
 
-@router.get("/recognize", status_code=status.HTTP_200_OK)
-async def recognize_books():
-    book_texts = await book_recognition_service.recognize()
+@router.post("/recognize", status_code=status.HTTP_200_OK)
+async def recognize_books(image_input: ImageInput):
+    image = image_input.image
+    book_texts = await book_recognition_service.recognize(image)
     return JSONResponse(status_code=status.HTTP_200_OK, content=book_texts)
 
 

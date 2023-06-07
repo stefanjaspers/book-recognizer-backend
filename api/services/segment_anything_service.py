@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 import torch
 
 # Segment Anything.
@@ -9,10 +10,14 @@ class SegmentAnythingService:
     def __init__(self) -> None:
         pass
 
-    def get_sam_output(self, sam_checkpoint, image_path, image_pil, boxes_filt):
+    def get_sam_output(self, sam_checkpoint, image, image_pil, boxes_filt):
         predictor = SamPredictor(build_sam(checkpoint=sam_checkpoint))
 
-        image = cv2.imread(image_path)
+        image_bytes = image.getvalue()
+
+        nparr = np.frombuffer(image_bytes, np.uint8)
+
+        image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 

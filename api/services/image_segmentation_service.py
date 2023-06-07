@@ -13,9 +13,12 @@ class ImageSegmentationService:
     def __init__(self) -> None:
         pass
 
-    def segment_books(self, mask_list, image_path, box_list):
-        # Read the image from image_path
-        image = cv2.imread(image_path)
+    def segment_books(self, mask_list, image, box_list):
+        image_bytes = image.getvalue()
+
+        nparr = np.frombuffer(image_bytes, np.uint8)
+
+        image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
         # Convert from BGR to RGB color space
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)

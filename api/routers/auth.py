@@ -92,4 +92,6 @@ async def login_for_access_token(
 
     token = create_access_token(user["username"], user["_id"], timedelta(minutes=20))
 
-    return {"access_token": token, "token_type": "bearer"}
+    access_token = {"access_token": token, "token_type": "bearer"}
+
+    return JSONResponse(status_code=status.HTTP_200_OK, content=access_token)

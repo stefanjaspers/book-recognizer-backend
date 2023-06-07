@@ -1,5 +1,7 @@
 import os
 import json
+import base64
+from io import BytesIO
 
 # Services.
 from api.services.grounding_dino_service import GroundingDINOService
@@ -26,15 +28,18 @@ class BookRecognitionService:
     def __init__(self) -> None:
         pass
 
-    async def recognize(self):
+    async def recognize(self, image_base64):
+        image_data = base64.b64decode(image_base64)
+
+        image_buffer = BytesIO(image_data)
+
         # Create output directory.
         # os.makedirs(config["output_dir"], exist_ok=True)
 
         print("Loading image")
 
         # Load image.
-        image_path = os.path.join(script_dir, "..", config["image_path"])
-        image_pil, image = grounding_dino_service.load_image(image_path)
+        image_pil, image_tensor = grounding_dino_service.load_image(image_buffer)
 
         print("Loading model")
 
@@ -52,7 +57,7 @@ class BookRecognitionService:
         # Run Grounding DINO model.
         boxes_filt, pred_phrases = grounding_dino_service.get_grounding_output(
             model,
-            image,
+            image_tensor,
             config["text_prompt"],
             config["box_threshold"],
             config["text_threshold"],
@@ -64,7 +69,7 @@ class BookRecognitionService:
         # Run Segment Anything Model.
         sam_checkpoint = os.path.join(script_dir, "..", "..", config["sam_checkpoint"])
         masks = segment_anything_service.get_sam_output(
-            sam_checkpoint, image_path, image_pil, boxes_filt
+            sam_checkpoint, image_buffer, image_pil, boxes_filt
         )
 
         # (optional) Draw output image.
@@ -82,7 +87,7 @@ class BookRecognitionService:
 
         # Run Rekognition OCR model and store book texts in list.
         book_texts = image_segmentation_service.segment_books(
-            masks, image_path, boxes_filt
+            masks, image_buffer, boxes_filt
         )
 
         print("Processing texts")
