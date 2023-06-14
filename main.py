@@ -14,6 +14,7 @@ from api.config import mongo_config
 # Router imports
 from api.routers import auth
 from api.routers import book
+from api.routers import user
 
 app = FastAPI()
 
@@ -51,6 +52,8 @@ async def shutdown_mongo_client():
 
 app.include_router(auth.router)
 app.include_router(book.router)
+app.include_router(user.router)
+
 
 
 @app.get("/")

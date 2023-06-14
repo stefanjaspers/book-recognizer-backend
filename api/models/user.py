@@ -19,7 +19,7 @@ class CreateUser(BaseModel):
                 "password": "guitarhero99",
                 "first_name": "Stefan",
                 "last_name": "Jaspers",
-                "book_preferences": []
+                "book_preferences": [],
             }
         }
 
@@ -39,3 +39,17 @@ class UpdateUser(BaseModel):
                 "book_preferences": ["Family", "Comedy", "Drama"],
             }
         }
+
+
+class AddBookPreferences(BaseModel):
+    preferences: List[str]
+
+    class Config:
+        schema_extra = {"example": {"preferences": ["Mystery", "Science Fiction"]}}
+
+
+class UpdateBookPreferences(BaseModel):
+    preferences: List[str]
+
+    class Config:
+        schema_extra = {"example": {"preferences": ["Comedy", "Drama"]}}
