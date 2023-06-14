@@ -9,6 +9,8 @@ router = APIRouter(prefix="/user", tags=["user"])
 
 @router.post("/book_preferences", status_code=status.HTTP_200_OK)
 async def add_book_preferences(request: Request, add_preferences: AddBookPreferences = Body(...), user: dict = Depends(get_current_user)):
+    print(f"Received payload: {add_preferences}")
+
     if user is None:
         raise HTTPException(status_code=401, detail="Authentication failed.")
 
