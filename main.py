@@ -55,7 +55,6 @@ app.include_router(book.router)
 app.include_router(user.router)
 
 
-
 @app.get("/")
-async def redirect_to_docs():
-    return RedirectResponse(url="/docs")
+async def index():
+    return {"Text": "Welcome to the Book Recognizer Backend!"}
