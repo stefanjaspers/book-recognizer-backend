@@ -1,5 +1,5 @@
 from locust import HttpUser, task, between
-from random import randint, choice
+from random import randint
 
 
 class UserBehavior(HttpUser):
@@ -48,13 +48,9 @@ class UserBehavior(HttpUser):
 
             preferences = {"preferences": ["Fantasy", "Adventure"]}
 
-            response = self.client.post(
+            self.client.post(
                 "/user/book_preferences", json=preferences, headers=headers
             )
-
-            # check if the response status is not 200, then print the response content for debug
-            if response.status_code != 200:
-                print(f"Update preferences failed: {response.content}")
 
     @task
     def update_preferences(self):
@@ -66,10 +62,4 @@ class UserBehavior(HttpUser):
 
             preferences = {"preferences": ["Fantasy", "Adventure"]}
 
-            response = self.client.put(
-                "/user/book_preferences", json=preferences, headers=headers
-            )
-
-            # check if the response status is not 200, then print the response content for debug
-            if response.status_code != 200:
-                print(f"Update preferences failed: {response.content}")
+            self.client.put("/user/book_preferences", json=preferences, headers=headers)
