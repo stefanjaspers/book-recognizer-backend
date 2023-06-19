@@ -28,4 +28,8 @@ class ImageInput(BaseModel):
 async def recognize_books(image_input: ImageInput):
     image = image_input.image
     book_texts = await book_recognition_service.recognize(image)
-    return JSONResponse(status_code=status.HTTP_200_OK, content=book_texts)
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=book_texts,
+        headers={"Content-Type": "application/json; charset=utf-8"},
+    )
