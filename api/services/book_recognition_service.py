@@ -100,6 +100,9 @@ class BookRecognitionService:
 
         api_urls = google_books_service.create_api_urls(url_encoded_book_texts)
 
+        for url in api_urls:
+            print(url)
+
         book_list = await google_books_service.get_book_list(api_urls)
 
         return book_list

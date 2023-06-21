@@ -59,4 +59,6 @@ class ImageSegmentationService:
                 aws_rekognition_service.extract_text_from_segment(cropped_segment_image)
             )
 
+            print(extracted_texts)
+
         return extracted_texts

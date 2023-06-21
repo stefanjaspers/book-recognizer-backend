@@ -38,7 +38,6 @@ class GoogleBooksService:
 
         for text in book_texts:
             processed_book_texts.append(self.remove_non_english_chars(text))
-
         return processed_book_texts
 
     """
@@ -67,6 +66,7 @@ class GoogleBooksService:
             self.GOOGLE_BOOKS_BASE_URL
             + encoded_book_text
             + self.GOOGLE_BOOKS_URL_SUFFIX
+            + self.GOOGLE_BOOKS_API_KEY
             for encoded_book_text in encoded_book_texts
         ]
 
