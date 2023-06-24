@@ -47,18 +47,18 @@ class ImageSegmentationService:
 
             # Convert the NumPy array to a PIL image
             segment_image = Image.fromarray(segment)
+            segment_image.save("segment_image.jpg")
 
             # Convert the PyTorch tensor to a NumPy array and get the bounding box coordinates
             x1, y1, x2, y2 = box.cpu().numpy().astype(int)
 
             # Crop the image using the bounding box
             cropped_segment_image = segment_image.crop((x1, y1, x2, y2))
+            cropped_segment_image.save("cropped_segment_image.jpg")
 
             # Run the OCR model for each cropped book and append the text to the list
             extracted_texts.append(
                 aws_rekognition_service.extract_text_from_segment(cropped_segment_image)
             )
-
-            print(extracted_texts)
 
         return extracted_texts

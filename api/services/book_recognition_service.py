@@ -2,6 +2,11 @@ import os
 import json
 import base64
 from io import BytesIO
+from PIL import Image
+import torch
+import torchvision.transforms as T
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 
 # Services.
 from api.services.grounding_dino_service import GroundingDINOService
@@ -33,9 +38,6 @@ class BookRecognitionService:
 
         image_buffer = BytesIO(image_data)
 
-        # Create output directory.
-        # os.makedirs(config["output_dir"], exist_ok=True)
-
         print("Loading image")
 
         # Load image.
@@ -64,6 +66,34 @@ class BookRecognitionService:
             config["device"],
         )
 
+        # Convert tensor to numpy if it's not already
+        if isinstance(boxes_filt, torch.Tensor):
+            boxes_filt = boxes_filt.cpu().numpy()
+
+        fig, ax = plt.subplots(1)
+        ax.imshow(image_pil)
+
+        # Image dimensions
+        width, height = image_pil.size
+
+        for i, box in enumerate(boxes_filt):
+            # Convert from center_x, center_y, w, h to x1, y1, x2, y2 and scale
+            center_x, center_y, w, h = box
+            x1 = (center_x - w / 2) * width
+            y1 = (center_y - h / 2) * height
+            x2 = (center_x + w / 2) * width
+            y2 = (center_y + h / 2) * height
+
+            rect = patches.Rectangle((x1, y1), x2 - x1, y2 - y1, linewidth=1, edgecolor='r', facecolor='none')
+            ax.add_patch(rect)
+
+            # Add the predicted phrase as a label
+            ax.text(x1, y1, pred_phrases[i], color='r')
+
+        plt.show()
+
+
+
         print("Running SAM model")
 
         # Run Segment Anything Model.
@@ -72,16 +102,15 @@ class BookRecognitionService:
             sam_checkpoint, image_buffer, image_pil, boxes_filt
         )
 
-        # (optional) Draw output image.
-        # output_dir = os.path.join(script_dir, "..", "..", config["output_dir"])
-        # visualization_service.draw_output_image(
-        #     image_path, masks, boxes_filt, pred_phrases, output_dir
-        # )
+        to_pil = T.ToPILImage()
 
-        # (optional) Save object masks.
-        # visualization_service.save_mask_data(
-        #     output_dir, masks, boxes_filt, pred_phrases
-        # )
+        # Make sure to normalize tensor to [0, 1] range if it's not already done
+        for i, tensor in enumerate(masks):
+            # Convert tensor to PIL image
+            image = to_pil(tensor.float())
+
+            # Save the PIL image
+            image.save(f'image_{i}.jpg')
 
         print("Running OCR model")
 
@@ -99,9 +128,6 @@ class BookRecognitionService:
         )
 
         api_urls = google_books_service.create_api_urls(url_encoded_book_texts)
-
-        for url in api_urls:
-            print(url)
 
         book_list = await google_books_service.get_book_list(api_urls)
 
