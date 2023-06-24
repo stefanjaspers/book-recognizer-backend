@@ -1,0 +1,17 @@
+[build-system]
+requires = [
+    "setuptools",
+    "wheel",
+    "torch",
+    "torchvision",
+    "torchaudio",
+    "transformers",
+    "addict",
+    "yapf",
+    "timm",
+    "numpy",
+    "opencv-python",
+    "supervision==0.6.0",
+    "pycocotools"
+]
+build-backend = "setuptools.build_meta"
