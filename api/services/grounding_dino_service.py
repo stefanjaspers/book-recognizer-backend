@@ -2,6 +2,8 @@ import sys
 import torch
 from pathlib import Path
 from PIL import Image
+import cv2
+import numpy as np
 
 root_dir = Path(__file__).resolve().parents[2]
 sys.path.append(str(root_dir))
@@ -21,7 +23,17 @@ class GroundingDINOService:
         pass
 
     def load_image(self, image_path):
-        image_pil = Image.open(image_path).convert("RGB")
+        # Convert BytesIO to numpy array
+        image_np = np.frombuffer(image_path.getvalue(), dtype=np.uint8)
+
+        # Decode the image from numpy array
+        image_cv = cv2.imdecode(image_np, cv2.IMREAD_COLOR)
+
+        # Convert the image from BGR to RGB
+        image_cv = cv2.cvtColor(image_cv, cv2.COLOR_BGR2RGB)
+
+        # Convert the OpenCV image (numpy array) to PIL image
+        image_pil = Image.fromarray(image_cv)
 
         transform = T.Compose(
             [

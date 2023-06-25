@@ -66,31 +66,31 @@ class BookRecognitionService:
             config["device"],
         )
 
-        # Convert tensor to numpy if it's not already
-        if isinstance(boxes_filt, torch.Tensor):
-            boxes_filt = boxes_filt.cpu().numpy()
+        # # Convert tensor to numpy if it's not already
+        # if isinstance(boxes_filt, torch.Tensor):
+        #     boxes_filt = boxes_filt.cpu().numpy()
 
-        fig, ax = plt.subplots(1)
-        ax.imshow(image_pil)
+        # fig, ax = plt.subplots(1)
+        # ax.imshow(image_pil)
 
-        # Image dimensions
-        width, height = image_pil.size
+        # # Image dimensions
+        # width, height = image_pil.size
 
-        for i, box in enumerate(boxes_filt):
-            # Convert from center_x, center_y, w, h to x1, y1, x2, y2 and scale
-            center_x, center_y, w, h = box
-            x1 = (center_x - w / 2) * width
-            y1 = (center_y - h / 2) * height
-            x2 = (center_x + w / 2) * width
-            y2 = (center_y + h / 2) * height
+        # for i, box in enumerate(boxes_filt):
+        #     # Convert from center_x, center_y, w, h to x1, y1, x2, y2 and scale
+        #     center_x, center_y, w, h = box
+        #     x1 = (center_x - w / 2) * width
+        #     y1 = (center_y - h / 2) * height
+        #     x2 = (center_x + w / 2) * width
+        #     y2 = (center_y + h / 2) * height
 
-            rect = patches.Rectangle((x1, y1), x2 - x1, y2 - y1, linewidth=1, edgecolor='r', facecolor='none')
-            ax.add_patch(rect)
+        #     rect = patches.Rectangle((x1, y1), x2 - x1, y2 - y1, linewidth=1, edgecolor='r', facecolor='none')
+        #     ax.add_patch(rect)
 
-            # Add the predicted phrase as a label
-            ax.text(x1, y1, pred_phrases[i], color='r')
+        #     # Add the predicted phrase as a label
+        #     ax.text(x1, y1, pred_phrases[i], color='r')
 
-        plt.show()
+        # plt.show()
 
 
 
