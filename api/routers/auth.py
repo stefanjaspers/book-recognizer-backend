@@ -90,7 +90,7 @@ async def login_for_access_token(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate user."
         )
 
-    token = create_access_token(user["username"], user["_id"], timedelta(minutes=20))
+    token = create_access_token(user["username"], user["_id"], timedelta(minutes=60))
 
     access_token = {"access_token": token, "token_type": "bearer"}
 
