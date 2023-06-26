@@ -50,3 +50,26 @@ async def update_book_preferences(
     return JSONResponse(
         status_code=status.HTTP_200_OK, content=updated_user["book_preferences"]
     )
+
+
+@router.get("/book_preferences", status_code=status.HTTP_200_OK)
+async def get_book_preferences(
+    request: Request,
+    user: dict = Depends(get_current_user),
+):
+    if user is None:
+        raise HTTPException(status_code=401, detail="Authentication failed.")
+
+    user_id = user["_id"]
+
+    user_data = await request.app.mongodb["users"].find_one({"_id": user_id})
+
+    # check if user has 'book_preferences' key
+    if "book_preferences" in user_data:
+        book_preferences = user_data["book_preferences"]
+        return JSONResponse(status_code=status.HTTP_200_OK, content=book_preferences)
+    else:
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={"detail": "Book preferences not found."},
+        )

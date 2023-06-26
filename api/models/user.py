@@ -41,6 +41,13 @@ class UpdateUser(BaseModel):
         }
 
 
+class GetBookPreferences(BaseModel):
+    preferences: List[str]
+
+    class Config:
+        schema_extra = {"example": {"preferences": ["Mystery", "Science Fiction"]}}
+
+
 class AddBookPreferences(BaseModel):
     preferences: List[str]
 

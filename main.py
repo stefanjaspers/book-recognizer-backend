@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 # FastAPI
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse
 
 # MongoDB driver
 from motor.motor_asyncio import AsyncIOMotorClient
